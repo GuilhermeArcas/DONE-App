@@ -18,6 +18,6 @@ Um aplicativo de lista de tarefas (To-Do List) desenvolvido em **Flutter** e **D
 
 ![Tela de Login](assets/screenshots/DONE!_PáginaDeLogin.jpg)
 ![Tela de Cadastro de Usuário](assets/screenshots/DONE!_PáginaDeCadastroDeUsuário.jpg)
-![Esqueci minha senha](assets/screenshots/DONE!_EsqueciASenha)
+![Esqueci minha senha](assets/screenshots/DONE!_EsqueciASenha.jpg)
 ![Home Page - Lista de Tarefas](assets/screenshots/DONE!_HomePageListaDeTarefas.jpg)
-![Home Page - Barra Lateral](assets/screenshots/DONE!_HomePageBarraLateral,jpg)
+![Home Page - Barra Lateral](assets/screenshots/HomePageBarraLateral,jpg)
