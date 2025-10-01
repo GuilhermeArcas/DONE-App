@@ -21,3 +21,10 @@ Um aplicativo de lista de tarefas (To-Do List) desenvolvido em **Flutter** e **D
 ![Esqueci minha senha](assets/screenshots/DONE!_EsqueciASenha.jpg)
 ![Home Page - Lista de Tarefas](assets/screenshots/DONE!_HomePageListaDeTarefas.jpg)
 ![Home Page - Barra Lateral](assets/screenshots/HomePageBarraLateral.jpg)
+
+## 📌 Próximos passos
+
+- [ ] Salvar tarefas no Firebase Firestore
+- [ ] Criar categorias personalizadas para as tarefas
+- [ ] Melhorar interface com animações
+- [ ] Dark Mode
