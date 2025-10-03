@@ -1,8 +1,8 @@
-# ✅ DONE! To-Do App 
+# ✅ DONE! To-Do App
 
-Um aplicativo de lista de tarefas (To-Do List) desenvolvido em **Flutter** e **Dart**. O objetivo é particar conceitos do desenvolvimento mobile, organização de código, integração com banco de dados (Firebase), autenticação de usuário, UI/UX e entre outros! 
+Um aplicativo de lista de tarefas (To-Do List) desenvolvido em **Flutter** e **Dart**. O objetivo é particar conceitos do desenvolvimento mobile, organização de código, integração com banco de dados (Firebase), autenticação de usuário, UI/UX e entre outros!
 
-## 🚀 Funcionalidades 
+## 🚀 Funcionalidades
 
 - Adicionar novas tarefas
 - Marcar tarefas como concluídas
@@ -21,4 +21,3 @@ Um aplicativo de lista de tarefas (To-Do List) desenvolvido em **Flutter** e **D
 ![Esqueci minha senha]()
 ![Home Page - Lista de Tarefas]()
 ![Home Page - Barra Lateral]()
-![]()

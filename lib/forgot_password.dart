@@ -89,7 +89,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
-                              hintText: "E-mail para verificação",
+                              labelText: "E-mail para verificação",
+                              floatingLabelStyle: TextStyle(
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(12),
@@ -130,7 +134,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: _resetPassword,
+                            onPressed: _isLoading ? null : _resetPassword,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal,
                               padding: const EdgeInsets.symmetric(
@@ -141,15 +145,25 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            child: const Text(
-                              "Solicitar Link",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
+                            child: _isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Text(
+                                    "Solicitar Link",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         ),
+
                         const SizedBox(height: 20),
 
                         // Voltar ao login
@@ -166,18 +180,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                   ),
                 ),
-              ),
-            ),
-
-            // Rodapé
-            Container(
-              color: Colors.teal,
-              padding: const EdgeInsets.all(12),
-              width: double.infinity,
-              child: const Text(
-                "@ 2025 DONE! | Mobile Privacy Policy",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 12),
               ),
             ),
           ],

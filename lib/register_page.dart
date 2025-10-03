@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/login_page.dart';
 import 'auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -13,7 +15,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
-
+  bool _obscurePassword = true;
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -26,6 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     try {
+      // Criação do usuário
       await authService.value.createAccount(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
@@ -38,88 +41,296 @@ class _RegisterPageState extends State<RegisterPage> {
 
       if (!mounted) return;
 
-      // Se deu certo, pode navegar para a tela principal
-      if (context.mounted) {
-        Navigator.pushReplacementNamed(context, "/todo");
-      }
+      Navigator.pushReplacementNamed(context, "/todo");
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message ?? "Erro desconhecido ao registrar";
+      });
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = "Erro inesperado: $e";
       });
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
-
-  final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
-    foregroundColor: Colors.black87,
-    backgroundColor: Colors.grey[300],
-    minimumSize: Size(100, 100),
-    padding: EdgeInsets.symmetric(horizontal: 20),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(25)),
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Criar Conta")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _usernameController,
-                decoration: const InputDecoration(labelText: "Nome de usuário"),
-                validator: (value) =>
-                    value!.isEmpty ? "Informe um nome de usuário" : null,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: "Email"),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) =>
-                    value!.isEmpty ? "Informe um email válido" : null,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: "Senha"),
-                obscureText: true,
-                validator: (value) => value!.length < 6
-                    ? "Senha deve ter pelo menos 6 caracteres"
-                    : null,
-              ),
-              const SizedBox(height: 20),
-              if (_errorMessage != null)
-                Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
-              const SizedBox(height: 20),
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      style: raisedButtonStyle,
-                      onPressed: _register,
-                      child: const Text("Registrar"),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Parte Central da Tela
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 60,
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Logo + título
+                        Text(
+                          "D O N E!",
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal.shade700,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          "Faça seu cadastro!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            letterSpacing: 0.5,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(height: 50),
+
+                        // Campo de nome de usuário
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextFormField(
+                            controller: _usernameController,
+                            decoration: const InputDecoration(
+                              labelText: "Nome de usuário",
+                              floatingLabelStyle: TextStyle(
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.teal,
+                                  width: 2,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.teal,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.teal,
+                                  width: 2,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                            ),
+                            validator: (value) => value!.isEmpty
+                                ? "Informe um nome de usuário"
+                                : null,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Campo de e-mail
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextFormField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              labelText: "Email",
+                              floatingLabelStyle: TextStyle(
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.teal,
+                                  width: 2,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.teal,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.teal,
+                                  width: 2,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) => value!.isEmpty
+                                ? "Informe um email válido"
+                                : null,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextFormField(
+                            controller: _passwordController,
+                            obscureText: _obscurePassword,
+                            decoration: InputDecoration(
+                              labelText: "Senha",
+                              floatingLabelStyle: TextStyle(
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.teal,
+                                  width: 2,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.teal,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.teal,
+                                  width: 2,
+                                ),
+                              ),
+
+                              // Ícone de visibilidade de senha
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: Colors.teal,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (_errorMessage != null) ...[
+                              Text(
+                                _errorMessage!,
+                                style: const TextStyle(color: Colors.red),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: _isLoading ? null : _register,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.teal,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                    horizontal: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: _isLoading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : const Text(
+                                        "Criar conta",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            // Cadastre-se
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.teal,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const LoginPage(),
+                                  ),
+                                );
+                              },
+                              child: const Text("Já tem conta? Faça Login"),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-              TextButton(
-                style: TextButton.styleFrom(foregroundColor: Colors.blue),
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, "/login");
-                },
-                child: const Text(
-                  "Já tem conta? Entrar",
-                  style: TextStyle(decoration: TextDecoration.underline),
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

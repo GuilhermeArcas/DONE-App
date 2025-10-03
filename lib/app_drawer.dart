@@ -12,6 +12,17 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
+  Future<void> _logout(BuildContext context) async {
+    await authService.value.signOut();
+
+    if (!mounted) return;
+    Navigator.pushReplacement(
+      // ignore: use_build_context_synchronously
+      context,
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = authService.value.currentUser;
@@ -21,7 +32,7 @@ class _AppDrawerState extends State<AppDrawer> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: Colors.blue),
+            decoration: const BoxDecoration(color: Colors.blue),
             accountName: Text(user?.displayName ?? "Sem nome"),
             accountEmail: Text(user?.email ?? "Sem e-mail"),
             currentAccountPicture: const CircleAvatar(
@@ -49,6 +60,9 @@ class _AppDrawerState extends State<AppDrawer> {
 
                 if (!mounted) return;
 
+                // ignore: use_build_context_synchronously
+                Navigator.pop(context); // fecha o Drawer
+                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Link enviado para $email")),
                 );
@@ -69,16 +83,7 @@ class _AppDrawerState extends State<AppDrawer> {
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.blue),
             title: const Text("Sair"),
-            onTap: () async {
-              await authService.value.signOut();
-
-              if (!mounted) return;
-
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-              );
-            },
+            onTap: () async => _logout(context),
           ),
         ],
       ),
