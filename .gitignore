@@ -49,6 +49,9 @@ app.*.map.json
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 
+# Firebase options
+lib/firebase_options.dart
+
 # Arquivos do sistema
 .DS_Store
 Thumbs.db

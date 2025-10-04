@@ -102,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                           width: double.infinity,
                           child: TextFormField(
                             controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
                             decoration: const InputDecoration(
                               labelText: "E-mail",
                               floatingLabelStyle: TextStyle(

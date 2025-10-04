@@ -156,6 +156,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           width: double.infinity,
                           child: TextFormField(
                             controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
                             decoration: const InputDecoration(
                               labelText: "Email",
                               floatingLabelStyle: TextStyle(
@@ -194,7 +195,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 vertical: 14,
                               ),
                             ),
-                            keyboardType: TextInputType.emailAddress,
                             validator: (value) => value!.isEmpty
                                 ? "Informe um email válido"
                                 : null,
