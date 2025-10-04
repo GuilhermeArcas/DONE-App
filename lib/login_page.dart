@@ -75,13 +75,13 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         // Logo + título
                         Text(
-                          "D O N E!",
+                          "DONE!",
                           style: TextStyle(
                             fontFamily: 'Roboto',
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
                             color: Colors.teal.shade700,
-                            letterSpacing: 2,
+                            letterSpacing: 4,
                           ),
                         ),
                         const SizedBox(height: 20),

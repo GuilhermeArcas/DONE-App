@@ -21,7 +21,6 @@ class _TodoPageState extends State<TodoPage> {
     _carregarTarefas();
   }
 
-  // FUNÇÃO PARA SALVAR AS TAREFAS
   Future<void> _salvarTarefas() async {
     final prefs = await SharedPreferences.getInstance();
     List<String> listaJson = _tarefas
@@ -30,7 +29,6 @@ class _TodoPageState extends State<TodoPage> {
     await prefs.setStringList('tarefas', listaJson);
   }
 
-  // FUNÇÃO PARA CARREGAR AS TAREFAS DO SHARED PREFERENCES
   Future<void> _carregarTarefas() async {
     final prefs = await SharedPreferences.getInstance();
     final listaJson = prefs.getStringList('tarefas') ?? [];
@@ -40,7 +38,6 @@ class _TodoPageState extends State<TodoPage> {
     });
   }
 
-  // FUNÇÃO PARA ORDENAR TAREFAS: CONCLUÍDAS NO FINAL
   void _ordenarTarefas() {
     _tarefas.sort((a, b) {
       if (a.concluida && !b.concluida) return 1;
@@ -49,7 +46,6 @@ class _TodoPageState extends State<TodoPage> {
     });
   }
 
-  // FUNÇÃO PARA ADICIONAR TAREFAS
   void _adicionarTarefa(String titulo) {
     if (titulo.isNotEmpty) {
       setState(() {
@@ -61,7 +57,6 @@ class _TodoPageState extends State<TodoPage> {
     }
   }
 
-  // FUNÇÃO PARA REMOVER TAREFAS
   void _removerTarefa(int index) {
     setState(() {
       _tarefas.removeAt(index);
@@ -72,50 +67,106 @@ class _TodoPageState extends State<TodoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("TO-DO App"),
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
       drawer: AppDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: SafeArea(
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                      hintText: "Digite uma tarefa...",
+            // Cabeçalho
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 20,
+              ), // espaçamento ajustado
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Builder(
+                    builder: (context) => IconButton(
+                      icon: const Icon(
+                        Icons.menu,
+                        size: 28,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () => _adicionarTarefa(_controller.text),
-                  style: ElevatedButton.styleFrom(
-                    elevation: 4,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
+                  Text(
+                    "DONE!",
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal,
+                      letterSpacing: 4,
                     ),
                   ),
-                  child: Text(
-                    "Adicionar",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
+
+            // Campo de entrada e botão Adicionar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      decoration: InputDecoration(
+                        labelText: "Digite uma tarefa...",
+                        floatingLabelStyle: TextStyle(
+                          color: Colors.teal,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(color: Colors.teal, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(color: Colors.teal, width: 2),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(color: Colors.teal, width: 2),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: () => _adicionarTarefa(_controller.text),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                    ),
+                    child: const Text(
+                      "Adicionar",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // Lista de tarefas
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
                 itemCount: _tarefas.length,
                 itemBuilder: (context, index) {
                   final tarefa = _tarefas[index];
@@ -131,51 +182,24 @@ class _TodoPageState extends State<TodoPage> {
                     onDismissed: (_) {
                       _removerTarefa(index);
                     },
-                    confirmDismiss: (direction) async {
-                      if (direction == DismissDirection.endToStart) {
-                        return await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text("Confirmar"),
-                            content: const Text("Deseja remover esta tarefa?"),
-                            actions: [
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(false),
-                                child: const Text("Cancelar"),
-                              ),
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(true),
-                                child: const Text("Remover"),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      return true;
-                    },
                     child: AnimatedOpacity(
                       duration: const Duration(milliseconds: 400),
-                      opacity: tarefa.concluida
-                          ? 0.5
-                          : 1, // tarefas concluídas ficam mais transparentes
-
+                      opacity: tarefa.concluida ? 0.5 : 1,
                       child: Card(
+                        color: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusGeometry.circular(16),
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(color: Colors.teal, width: 2),
                         ),
-                        child: ListTile(
-                          leading: Checkbox(
-                            value: tarefa.concluida,
-                            onChanged: (valor) {
-                              setState(() {
-                                tarefa.concluida = valor ?? false;
-                                _ordenarTarefas();
-                                _salvarTarefas();
-                              });
-                            },
-                          ),
+                        child: CheckboxListTile(
+                          value: tarefa.concluida,
+                          onChanged: (valor) {
+                            setState(() {
+                              tarefa.concluida = valor ?? false;
+                              _ordenarTarefas();
+                              _salvarTarefas();
+                            });
+                          },
                           title: Text(
                             tarefa.titulo,
                             style: TextStyle(
@@ -188,10 +212,7 @@ class _TodoPageState extends State<TodoPage> {
                                   : Colors.black,
                             ),
                           ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _removerTarefa(index),
-                          ),
+                          controlAffinity: ListTileControlAffinity.leading,
                         ),
                       ),
                     ),
@@ -199,13 +220,20 @@ class _TodoPageState extends State<TodoPage> {
                 },
               ),
             ),
+            // Botão Adicionar fixo
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  onPressed: () => _adicionarTarefa(_controller.text),
+                  backgroundColor: Colors.teal,
+                  child: const Icon(Icons.add, size: 32, color: Colors.white),
+                ),
+              ),
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _adicionarTarefa(_controller.text),
-        backgroundColor: Colors.blue[900],
-        child: const Icon(Icons.add, size: 28, color: Colors.white),
       ),
     );
   }
