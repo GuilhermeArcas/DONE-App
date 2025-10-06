@@ -202,6 +202,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         const SizedBox(height: 12),
 
+                        // Campo de senha
                         SizedBox(
                           width: double.infinity,
                           child: TextFormField(
@@ -286,12 +287,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                 ),
+
                                 child: _isLoading
                                     ? const SizedBox(
                                         height: 20,
                                         width: 20,
                                         child: CircularProgressIndicator(
-                                          color: Colors.white,
+                                          color: Colors.teal,
                                           strokeWidth: 2,
                                         ),
                                       )
