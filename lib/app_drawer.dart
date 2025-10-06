@@ -32,16 +32,16 @@ class _AppDrawerState extends State<AppDrawer> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(color: Colors.blue),
+            decoration: const BoxDecoration(color: Colors.teal),
             accountName: Text(user?.displayName ?? "Sem nome"),
             accountEmail: Text(user?.email ?? "Sem e-mail"),
             currentAccountPicture: const CircleAvatar(
               backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 40, color: Colors.blue),
+              child: Icon(Icons.person, size: 40, color: Colors.teal),
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.edit, color: Colors.blue),
+            leading: const Icon(Icons.edit, color: Colors.teal),
             title: const Text("Atualizar Nome"),
             onTap: () {
               Navigator.push(
@@ -51,7 +51,7 @@ class _AppDrawerState extends State<AppDrawer> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.email, color: Colors.blue),
+            leading: const Icon(Icons.email, color: Colors.teal),
             title: const Text("Redefinir Senha por E-mail"),
             onTap: () async {
               final email = user?.email;
@@ -70,7 +70,7 @@ class _AppDrawerState extends State<AppDrawer> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.password, color: Colors.blue),
+            leading: const Icon(Icons.password, color: Colors.teal),
             title: const Text("Alterar senha"),
             onTap: () {
               Navigator.push(
@@ -81,7 +81,7 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.logout, color: Colors.blue),
+            leading: const Icon(Icons.logout, color: Colors.teal),
             title: const Text("Sair"),
             onTap: () async => _logout(context),
           ),
